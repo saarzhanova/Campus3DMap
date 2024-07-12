@@ -2,14 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
     <title>Campus Map</title>
     <style>
         body { margin: 0; }
+        .legend {
+            width: 300px;
+            background-color: #363636;
+            padding: 20px;
+            margin: 20px;
+            position: fixed;
+            color: #898a8c;
+        }
+        #main {
+            height: 50px;
+        }
+        #buildingInfo {
+            height: 240px;
+            display: none;
+        }
+        .labelText {
+            color: #ffffff;
+        }
+        #close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-<div id="label" style=" background-color: white; padding: 20px; width: 115px; border: 2px solid white; border-radius: 15px; -moz-border-radius: 15px; position: fixed; display: none;">
-    <h1 id="name" style="font-weight: bold"></h1>
+<div id="main" class="legend">
+</div>
+<div id="buildingInfo" class="legend">
+    <h3><span id="buildingName" class="labelText"></span></h3>
+    <h4><span>Year of construction: </span><span id="buildingYear" class="labelText"></span></h4>
+    <h4><span>Architect: </span><span id="buildingArchitect" class="labelText"></span></h4>
+    <h4><span>School: </span><span id="buildingSchool" class="labelText"></span></h4>
+    <h4><span>Energy: </span><span id="buildingEnergy" class="labelText"></span></h4>
+    <i class="fa fa-times" id="close" aria-hidden="true"></i>
+</div>
 </div>
 <script type="module" src="main.js"></script>
 </body>

@@ -2,11 +2,10 @@ import * as THREE from 'three';
 import {Color} from "three";
 import {OrbitControls} from "three/addons/controls/OrbitControls";
 import {OBJLoader} from "three/addons";
-import {label} from "three/addons/nodes/core/ContextNode";
 
 
 const scene = new THREE.Scene();
-scene.background = new Color('black');
+scene.background = new Color("#3f3f3f");
 
 const fov = 75
 const aspect = window.innerWidth / window.innerHeight
@@ -23,7 +22,7 @@ const bottom = -1000
 const orthographicCamera = new THREE.OrthographicCamera(left, right, top, bottom)
 
 const camera = perspectiveCamera
-camera.position.set(-100, 1000, 1000)
+camera.position.set(0, 300, 200)
 
 scene.add(camera)
 scene.add(orthographicCamera)
@@ -60,25 +59,36 @@ controls.mouseButtons = {
 
 const objLoader = new OBJLoader();
 
-const url = 'CampusMap.obj';
-objLoader.load(url, (root) => {
-    console.log(root)
-    scene.add(root);
-    root.traverse(function (child) {
-        if (child.name.includes("Forest")) {
-            if (child.material.color) {
-                child.material.color.setRGB(0, 1, 0);
+const url = 'verysmallCampus.obj';
+objLoader.load(url, (object) => {
+    console.log(object)
+    const color1 = new THREE.Color(56 / 255, 56 / 255, 56 / 255);
+    const color2 = new THREE.Color(40 / 255, 40 / 255, 40 / 255);
+    const edgeColor = new THREE.Color(0, 0, 0);
+    const edgeMaterial = new THREE.LineBasicMaterial({ color: edgeColor, linewidth: 4});
+
+    // const scaleFactor = 1/8;
+    // object.scale.set(scaleFactor, scaleFactor, scaleFactor);
+
+    object.traverse(function (child) {
+        if (child.isMesh) {
+            if (child.material) {
+                child.material.color = color1;
+                child.material.needsUpdate = true;
             }
-        } else if (child.name.includes("Water")) {
-            if (child.material.color) {
-                child.material.color.setRGB(0, 0, 1);
-            }
-        } else if (child.isMesh && child.name.includes("SurfaceArea")) {
-            if (child.material.color) {
-                child.material.color.setRGB(0, 0, 0);
-            }
+            const edges = new THREE.EdgesGeometry(child.geometry);
+            const lineSegments = new THREE.LineSegments(edges, edgeMaterial);
+            child.add(lineSegments);
+
         }
-    })
+    });
+    object.traverse(function (child) {
+        if (child.name.includes("Building")) {
+            console.log(child)
+            child.material[1].color = color2
+        }
+    });
+    scene.add(object);
 }, undefined, (error) => {
     console.error(error);
 });
@@ -87,24 +97,44 @@ objLoader.load(url, (root) => {
 const raycaster = new THREE.Raycaster()
 const clickMouse = new THREE.Vector2()
 
+const originalMaterials = new Map();
+
+let previousObject = null;
+
 function goByClick() {
     clickMouse.x = (event.clientX / window.innerWidth) * 2 - 1
     clickMouse.y = -(event.clientY / window.innerHeight) * 2 + 1
     raycaster.setFromCamera(clickMouse, camera)
-    const found = raycaster.intersectObjects(scene.children) // all intersection points within the 3d scene
+    const found = raycaster.intersectObjects(scene.children, true) // all intersection points within the 3d scene
     if (found.length > 0) {
-        const object = found[0].object
+        const foundObject = found[0].object
         console.log('intersection points with scene objects are found!')
         console.log('intersection points: ', found)
-        console.log('intersection object name: ', object.name)
-        const label = document.getElementById("label")
-        const name = document.getElementById("name")
-        label.style.display = "block";
-        name.innerText = found[0].object.name
-        if (object.name.includes("Building")) {
-            console.log('object.name', object)
-            object.material[0].color.setRGB(0, 1, 0);
+        console.log('intersection object name: ', foundObject.name)
+
+        if (foundObject.name.includes("Building")) {
+            console.log('object.name', foundObject)
+
+            label.style.display = "block"
+            name.innerText = found[0].object.name
+
+            if (previousObject && originalMaterials.has(previousObject)) {
+                previousObject.material = originalMaterials.get(previousObject);
+            }
+            if (!originalMaterials.has(foundObject)) {
+                originalMaterials.set(foundObject, foundObject.material);
+            }
+            const materialPainted = new THREE.MeshBasicMaterial({ color: new THREE.Color(243 / 255, 40 / 241, 21 / 255)});
+            foundObject.material = materialPainted;
+            previousObject = foundObject;
         }
+    }
+}
+
+function closeLabel() {
+    label.style.display = "none"
+    if (previousObject && originalMaterials.has(previousObject)) {
+        previousObject.material = originalMaterials.get(previousObject);
     }
 }
 
@@ -115,4 +145,8 @@ function animate() {
 }
 
 animate();
+const label = document.getElementById("buildingInfo")
+const name = document.getElementById("buildingName")
 window.addEventListener('click', goByClick)
+const closeButton = document.getElementById("close")
+closeButton.addEventListener('click', closeLabel)
