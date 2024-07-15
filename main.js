@@ -59,7 +59,7 @@ controls.mouseButtons = {
 
 const objLoader = new OBJLoader();
 
-const url = 'verysmallCampus.obj';
+const url = 'CampusMap.obj';
 objLoader.load(url, (object) => {
     console.log(object)
     const color1 = new THREE.Color(56 / 255, 56 / 255, 56 / 255);
@@ -94,6 +94,30 @@ objLoader.load(url, (object) => {
 });
 
 /////////////////////////////////////////////////
+const IPPBuilsings = [
+    {
+        name: "Télécom Paris",
+        architect: "Yvonne Farrell et Shelley McNamara - Grafton Architects",
+        yearConstruction: "2019",
+        energy: ""
+    },{
+        name: "ENSEA",
+        architect: "Cab architecte",
+        yearConstruction: "2018",
+        energy: ""
+    },{
+        name: "ENSTA",
+        architect: "Patriarche",
+        yearConstruction: "2012",
+        energy: ""
+    },{
+        name: "Polytechnique",
+        architect: "Henri Pottier",
+        yearConstruction: "1970",
+        energy: ""
+    },
+]
+
 const raycaster = new THREE.Raycaster()
 const clickMouse = new THREE.Vector2()
 
@@ -117,6 +141,10 @@ function goByClick() {
 
             label.style.display = "block"
             name.innerText = found[0].object.name
+            architect.innerText = "Yvonne Farrell et Shelley McNamara - Grafton Architects"
+            year.innerText = "2019"
+            school.innerText = "Institut Polytechnique de Paris"
+            energy.innerText = "..."
 
             if (previousObject && originalMaterials.has(previousObject)) {
                 previousObject.material = originalMaterials.get(previousObject);
@@ -147,6 +175,10 @@ function animate() {
 animate();
 const label = document.getElementById("buildingInfo")
 const name = document.getElementById("buildingName")
+const architect = document.getElementById("buildingArchitect")
+const year = document.getElementById("buildingYear")
+const school = document.getElementById("buildingSchool")
+const energy = document.getElementById("buildingEnergy")
 window.addEventListener('click', goByClick)
 const closeButton = document.getElementById("close")
 closeButton.addEventListener('click', closeLabel)
