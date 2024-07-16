@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-
+    <meta charset="UTF-8">
     <title>Campus Map</title>
     <style>
         body { margin: 0; }
@@ -18,7 +17,6 @@
             height: 50px;
         }
         #buildingInfo {
-            height: 240px;
             display: none;
         }
         .labelText {
@@ -30,22 +28,26 @@
             right: 15px;
             cursor: pointer;
         }
+        #additionalBuildingInfo {
+            display: none;
+        }
     </style>
-  <script type="module" crossorigin src="/Campus3DMap/assets/index-D2P_7fB8.js"></script>
-  <link rel="stylesheet" crossorigin href="/Campus3DMap/assets/index-cP_cZb4F.css">
+  <script type="module" crossorigin src="/Campus3DMaps/assets/index-DRdCw6PE.js"></script>
+  <link rel="stylesheet" crossorigin href="/Campus3DMaps/assets/index-C86QDNI9.css">
 </head>
 <body>
 <div id="main" class="legend">
 </div>
 <div id="buildingInfo" class="legend">
     <h3><span id="buildingName" class="labelText"></span></h3>
-    <h4><span>Year of construction: </span><span id="buildingYear" class="labelText"></span></h4>
-    <h4><span>Architect: </span><span id="buildingArchitect" class="labelText"></span></h4>
-    <h4><span>School: </span><span id="buildingSchool" class="labelText"></span></h4>
-    <h4><span>Energy: </span><span id="buildingEnergy" class="labelText"></span></h4>
+    <div id="additionalBuildingInfo">
+        <h4><span>Year of construction: </span><span id="buildingYear" class="labelText"></span></h4>
+        <h4><span>Architect: </span><span id="buildingArchitect" class="labelText"></span></h4>
+        <h4><span>School: </span><span id="buildingSchool" class="labelText"></span></h4>
+        <h4><span>Energy: </span><span id="buildingEnergy" class="labelText"></span></h4>
+    </div>
     <i class="fa fa-times" id="close" aria-hidden="true"></i>
 </div>
-</div>
-
+</div>
 </body>
 </html>
