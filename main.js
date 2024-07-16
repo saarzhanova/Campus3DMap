@@ -61,7 +61,6 @@ const objLoader = new OBJLoader();
 
 const url = 'CampusMap.obj';
 objLoader.load(url, (object) => {
-    console.log(object)
     const color1 = new THREE.Color(56 / 255, 56 / 255, 56 / 255);
     const color2 = new THREE.Color(40 / 255, 40 / 255, 40 / 255);
     const edgeColor = new THREE.Color(0, 0, 0);
@@ -84,7 +83,6 @@ objLoader.load(url, (object) => {
     });
     object.traverse(function (child) {
         if (child.name.includes("Building")) {
-            console.log(child)
             child.material[1].color = color2
         }
     });
