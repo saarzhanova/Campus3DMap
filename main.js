@@ -125,26 +125,57 @@ const originalMaterials = new Map();
 
 let previousObject = null;
 
+let isIPP = false
+
 function goByClick() {
     clickMouse.x = (event.clientX / window.innerWidth) * 2 - 1
     clickMouse.y = -(event.clientY / window.innerHeight) * 2 + 1
     raycaster.setFromCamera(clickMouse, camera)
     const found = raycaster.intersectObjects(scene.children, true) // all intersection points within the 3d scene
     if (found.length > 0) {
-        const foundObject = found[0].object
-        console.log('intersection points with scene objects are found!')
-        console.log('intersection points: ', found)
-        console.log('intersection object name: ', foundObject.name)
+        let foundObject = found[0].object
+        let foundObjectName = foundObject.name
+        console.log('intersection object name: ', foundObjectName)
 
         if (foundObject.name.includes("Building")) {
             console.log('object.name', foundObject)
 
             label.style.display = "block"
-            name.innerText = found[0].object.name
-            architect.innerText = "Yvonne Farrell et Shelley McNamara - Grafton Architects"
-            year.innerText = "2019"
-            school.innerText = "Institut Polytechnique de Paris"
-            energy.innerText = "..."
+            additInfo.style.display = "none"
+
+            isIPP = false
+            let building
+
+            switch (foundObjectName ) {
+                case "Building T?l?com Paris":
+                    isIPP = true
+                    building = IPPBuilsings[0]
+                    break
+                case "Building ENSAE - Institut Polytechnique de Paris":
+                    isIPP = true
+                    building = IPPBuilsings[1]
+                    break
+                case "Building8022":
+                    isIPP = true
+                    building = IPPBuilsings[2]
+                    break
+                case "Building Grand Hall":
+                    isIPP = true
+                    building = IPPBuilsings[3]
+                    break
+            }
+
+            if (isIPP) {
+                additInfo.style.display = "block"
+                name.innerText = building.name
+                architect.innerText = building.architect
+                year.innerText = building.yearConstruction
+                school.innerText = "Institut Polytechnique de Paris"
+                energy.innerText = "..."
+            } else {
+                name.innerText = foundObjectName
+            }
+
 
             if (previousObject && originalMaterials.has(previousObject)) {
                 previousObject.material = originalMaterials.get(previousObject);
@@ -161,6 +192,8 @@ function goByClick() {
 
 function closeLabel() {
     label.style.display = "none"
+    additInfo.style.display = "none"
+    isIPP = false
     if (previousObject && originalMaterials.has(previousObject)) {
         previousObject.material = originalMaterials.get(previousObject);
     }
@@ -174,6 +207,7 @@ function animate() {
 
 animate();
 const label = document.getElementById("buildingInfo")
+const additInfo = document.getElementById("additionalBuildingInfo")
 const name = document.getElementById("buildingName")
 const architect = document.getElementById("buildingArchitect")
 const year = document.getElementById("buildingYear")

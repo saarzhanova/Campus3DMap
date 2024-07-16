@@ -18,7 +18,6 @@
             height: 50px;
         }
         #buildingInfo {
-            height: 240px;
             display: none;
         }
         .labelText {
@@ -30,6 +29,9 @@
             right: 15px;
             cursor: pointer;
         }
+        #additionalBuildingInfo {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -37,10 +39,12 @@
 </div>
 <div id="buildingInfo" class="legend">
     <h3><span id="buildingName" class="labelText"></span></h3>
-    <h4><span>Year of construction: </span><span id="buildingYear" class="labelText"></span></h4>
-    <h4><span>Architect: </span><span id="buildingArchitect" class="labelText"></span></h4>
-    <h4><span>School: </span><span id="buildingSchool" class="labelText"></span></h4>
-    <h4><span>Energy: </span><span id="buildingEnergy" class="labelText"></span></h4>
+    <div id="additionalBuildingInfo">
+        <h4><span>Year of construction: </span><span id="buildingYear" class="labelText"></span></h4>
+        <h4><span>Architect: </span><span id="buildingArchitect" class="labelText"></span></h4>
+        <h4><span>School: </span><span id="buildingSchool" class="labelText"></span></h4>
+        <h4><span>Energy: </span><span id="buildingEnergy" class="labelText"></span></h4>
+    </div>
     <i class="fa fa-times" id="close" aria-hidden="true"></i>
 </div>
 </div>
