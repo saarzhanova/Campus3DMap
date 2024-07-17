@@ -1848,7 +1848,7 @@ routeData.forEach(route => {
             break
     }
     coordinates.forEach(line => {
-        const points = line.map(coord => new THREE.Vector3(-(coord[0] - 2.18) * -number + differenceX, 30, (coord[1] - 48.71) * -number + differenceY));
+        const points = line.map(coord => new THREE.Vector3(-(coord[0] - 2.18) * -number + differenceX - 440, 30, (coord[1] - 48.71) * -number + differenceY + 60));
         const routeGeometry = new THREE.BufferGeometry().setFromPoints(points);
         const routeMaterial = new THREE.LineBasicMaterial({ color: `#${routeColor}` });
         const routeLine = new THREE.Line(routeGeometry, routeMaterial);

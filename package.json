@@ -4,6 +4,7 @@
     "vite": "^5.3.3"
   },
   "scripts": {
-    "deploy": "npx vite build && gh-pages -d dist -b gh-pages"
+    "build": "npx vite build",
+    "deploy": "gh-pages -d dist -b gh-pages"
   }
 }
