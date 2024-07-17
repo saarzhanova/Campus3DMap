@@ -4,7 +4,7 @@ import {OrbitControls} from "three/addons/controls/OrbitControls";
 import {OBJLoader} from "three/addons";
 
 
-const scene = new THREE.Scene();
+export const scene = new THREE.Scene();
 scene.background = new Color("#3f3f3f");
 
 const fov = 75
@@ -59,7 +59,7 @@ controls.mouseButtons = {
 
 const objLoader = new OBJLoader();
 
-const url = 'models/CampusMap.obj';
+const url = 'assets/models/smallCampus.obj';
 objLoader.load(url, (object) => {
     const color1 = new THREE.Color(56 / 255, 56 / 255, 56 / 255);
     const color2 = new THREE.Color(40 / 255, 40 / 255, 40 / 255);
