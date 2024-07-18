@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import {scene} from "./main.js";
+import {log} from "three/addons/nodes/math/MathNode";
 
 const routeData = [
     {
@@ -1814,44 +1815,83 @@ const routeData = [
     }
 ]
 
+let busTracesLegend = document.getElementById("busTraces")
+
 routeData.forEach(route => {
     let coordinates = route.shape.geometry.coordinates;
     let routeColor = route.route_color;
-    let number = 0
-    let differenceX = 0
-    let differenceY = 0
+    // let number = 73000
+    // let differenceX = -1600
+    // let differenceY = 400
+    let number = 105000
+    let differenceX = -2240
+    let differenceY = 390
+    let color
     switch (route.route_short_name) {
         case "91-08":
-            differenceX = -1050
-            differenceY = 125
-            number = 50000
-            break
-        case "14":
-            differenceX = -1060
-            differenceY = 300
-            number = 50000
+            color = 'red'
             break
         case "EX91-10":
-            differenceX = -2240
-            differenceY = 390
-            number = 105000
+            color = 'green'
+            break
+        case "14":
+            color = 'blue'
             break
         case "N63":
-            differenceX = -1060
-            differenceY = 300
-            number = 50000
+            color = 'yellow'
             break
         case "91-06":
-            differenceX = -2240
-            differenceY = 390
-            number = 105000
+            color = 'pink'
             break
+        default:
+            routeColor = 'black';
+            break;
     }
+    const legendItem = document.createElement('div');
+    legendItem.className = 'legend-item';
+    legendItem.id = route.route_short_name
+    legendItem.style.cursor = "pointer"
+    legendItem.innerHTML = `<div class="legend-color" style="background-color: ${color};"></div>${route.route_short_name}`;
+    busTracesLegend.appendChild(legendItem);
+
     coordinates.forEach(line => {
         const points = line.map(coord => new THREE.Vector3(-(coord[0] - 2.18) * -number + differenceX - 440, 30, (coord[1] - 48.71) * -number + differenceY + 60));
         const routeGeometry = new THREE.BufferGeometry().setFromPoints(points);
-        const routeMaterial = new THREE.LineBasicMaterial({ color: `#${routeColor}` });
+        const routeMaterial = new THREE.LineBasicMaterial({ color: color });
         const routeLine = new THREE.Line(routeGeometry, routeMaterial);
+
+        routeLine.name = `${route.route_short_name}`;
+
         scene.add(routeLine);
     });
-})
+});
+
+busTracesLegend.addEventListener('click', hideAndShowTrace)
+
+let deletedObjects = {}
+function hideAndShowTrace() {
+    let isHidden = false
+    console.log(event)
+    let trace = document.getElementById(event.target.id)
+    if (trace.classList.length !== 0) {
+        trace.classList.forEach((traceClass) => {
+            if (traceClass === "hidden") {
+                isHidden = true
+            }
+        })
+    }
+    if (isHidden) {
+        trace.classList.remove("hidden")
+        scene.add(deletedObjects.event.target.id)
+    } else {
+        trace.classList.add("hidden")
+        let deleted = []
+        while (scene.getObjectByName(event.target.id)) {
+            deleted.push(scene.getObjectByName(event.target.id))
+            scene.remove(scene.getObjectByName(event.target.id))
+        }
+        deletedObjects.event.target.id = deleted
+    }
+    console.log(deletedObjects)
+}
+

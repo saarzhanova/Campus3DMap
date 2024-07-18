@@ -15,7 +15,9 @@
             color: #898a8c;
         }
         #main {
-            height: 50px;
+            /*height: 50px;*/
+            display: flex;
+            flex-direction: row;
         }
         #buildingInfo {
             display: none;
@@ -32,10 +34,26 @@
         #additionalBuildingInfo {
             display: none;
         }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #ffffff;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        .hidden {
+            opacity: 50%;
+        }
     </style>
 </head>
 <body>
 <div id="main" class="legend">
+    <div id="busTraces">
+    </div>
 </div>
 <div id="buildingInfo" class="legend">
     <h3><span id="buildingName" class="labelText"></span></h3>

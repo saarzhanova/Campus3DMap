@@ -22,7 +22,8 @@ const bottom = -1000
 const orthographicCamera = new THREE.OrthographicCamera(left, right, top, bottom)
 
 const camera = perspectiveCamera
-camera.position.set(0, 300, 200)
+// camera.position.set(0, 300, 200)
+camera.position.set(0, 600, 600)
 
 scene.add(camera)
 scene.add(orthographicCamera)
@@ -59,7 +60,7 @@ controls.mouseButtons = {
 
 const objLoader = new OBJLoader();
 
-const url = 'assets/models/CampusMap.obj';
+const url = 'assets/models/verysmallCampus.obj';
 objLoader.load(url, (object) => {
     const color1 = new THREE.Color(56 / 255, 56 / 255, 56 / 255);
     const color2 = new THREE.Color(40 / 255, 40 / 255, 40 / 255);
