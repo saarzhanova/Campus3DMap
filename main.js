@@ -60,7 +60,7 @@ controls.mouseButtons = {
 
 const objLoader = new OBJLoader();
 
-const url = 'assets/models/verysmallCampus.obj';
+const url = 'assets/models/CampusMap.obj';
 objLoader.load(url, (object) => {
     const color1 = new THREE.Color(56 / 255, 56 / 255, 56 / 255);
     const color2 = new THREE.Color(40 / 255, 40 / 255, 40 / 255);

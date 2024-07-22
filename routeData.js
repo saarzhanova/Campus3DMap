@@ -1814,84 +1814,121 @@ const routeData = [
         }
     }
 ]
-
 let busTracesLegend = document.getElementById("busTraces")
-
-routeData.forEach(route => {
-    let coordinates = route.shape.geometry.coordinates;
-    let routeColor = route.route_color;
-    // let number = 73000
-    // let differenceX = -1600
-    // let differenceY = 400
-    let number = 105000
-    let differenceX = -2240
-    let differenceY = 390
-    let color
-    switch (route.route_short_name) {
-        case "91-08":
-            color = 'red'
-            break
-        case "EX91-10":
-            color = 'green'
-            break
-        case "14":
-            color = 'blue'
-            break
-        case "N63":
-            color = 'yellow'
-            break
-        case "91-06":
-            color = 'pink'
-            break
-        default:
-            routeColor = 'black';
-            break;
-    }
-    const legendItem = document.createElement('div');
-    legendItem.className = 'legend-item';
-    legendItem.id = route.route_short_name
-    legendItem.style.cursor = "pointer"
-    legendItem.innerHTML = `<div class="legend-color" style="background-color: ${color};"></div>${route.route_short_name}`;
-    busTracesLegend.appendChild(legendItem);
-
-    coordinates.forEach(line => {
-        const points = line.map(coord => new THREE.Vector3(-(coord[0] - 2.18) * -number + differenceX - 440, 30, (coord[1] - 48.71) * -number + differenceY + 60));
-        const routeGeometry = new THREE.BufferGeometry().setFromPoints(points);
-        const routeMaterial = new THREE.LineBasicMaterial({ color: color });
-        const routeLine = new THREE.Line(routeGeometry, routeMaterial);
-
-        routeLine.name = `${route.route_short_name}`;
-
-        scene.add(routeLine);
-    });
-});
-
-busTracesLegend.addEventListener('click', hideAndShowTrace)
-
 let deletedObjects = {}
-function hideAndShowTrace() {
-    let isHidden = false
-    console.log(event)
-    let trace = document.getElementById(event.target.id)
-    if (trace.classList.length !== 0) {
-        trace.classList.forEach((traceClass) => {
-            if (traceClass === "hidden") {
-                isHidden = true
-            }
-        })
-    }
-    if (isHidden) {
-        trace.classList.remove("hidden")
-        scene.add(deletedObjects.event.target.id)
-    } else {
-        trace.classList.add("hidden")
-        let deleted = []
-        while (scene.getObjectByName(event.target.id)) {
-            deleted.push(scene.getObjectByName(event.target.id))
-            scene.remove(scene.getObjectByName(event.target.id))
+
+function showBusTraces() {
+    routeData.forEach(route => {
+        let coordinates = route.shape.geometry.coordinates;
+        let routeColor = route.route_color;
+        // let number = 73000
+        // let differenceX = -1600
+        // let differenceY = 400
+        let number = 105000
+        let differenceX = -2240
+        let differenceY = 390
+        let color
+        switch (route.route_short_name) {
+            case "91-08":
+                color = 'red'
+                break
+            case "EX91-10":
+                color = 'green'
+                break
+            case "14":
+                color = 'blue'
+                break
+            case "N63":
+                color = 'yellow'
+                break
+            case "91-06":
+                color = 'pink'
+                break
+            default:
+                routeColor = 'black';
+                break;
         }
-        deletedObjects.event.target.id = deleted
-    }
-    console.log(deletedObjects)
+        if (!document.getElementById(route.route_short_name)) {
+            const legendItem = document.createElement('div');
+            legendItem.className = 'legend-item';
+            legendItem.id = route.route_short_name
+            legendItem.style.cursor = "pointer"
+            legendItem.innerHTML = `<div class="legend-color" style="background-color: ${color};"></div>${route.route_short_name}`;
+            busTracesLegend.appendChild(legendItem);
+        }
+
+        coordinates.forEach(line => {
+            const points = line.map(coord => new THREE.Vector3(-(coord[0] - 2.18) * -number + differenceX - 440, 30, (coord[1] - 48.71) * -number + differenceY + 60));
+            const routeGeometry = new THREE.BufferGeometry().setFromPoints(points);
+            const routeMaterial = new THREE.LineBasicMaterial({color: color});
+            const routeLine = new THREE.Line(routeGeometry, routeMaterial);
+
+            routeLine.name = `${route.route_short_name}`;
+
+            scene.add(routeLine);
+        });
+    });
+    switchshowToHide()
 }
 
+function hideAndShowTrace() {
+    let isHidden = false
+    if (event.target.classList.contains('legend-item')) {
+        console.log(event)
+        const targetID = event.target.id
+        let trace = document.getElementById(targetID)
+        if (trace.classList.length !== 0) {
+            trace.classList.forEach((traceClass) => {
+                if (traceClass === "hidden") {
+                    isHidden = true
+                }
+            })
+        }
+        if (isHidden) {
+            console.log(`line ${targetID} is turned on`)
+            trace.classList.remove("hidden")
+            for (let i in deletedObjects[targetID]) {
+                scene.add(deletedObjects[targetID][i])
+            }
+        } else {
+            console.log(`line ${targetID} is turned off`)
+            trace.classList.add("hidden")
+            let deleted = []
+            while (scene.getObjectByName(targetID)) {
+                deleted.push(scene.getObjectByName(targetID))
+                scene.remove(scene.getObjectByName(targetID))
+            }
+            deletedObjects[targetID] = deleted
+        }
+    }
+}
+
+function hideBusTraces() {
+    const linesToRemove = [];
+    scene.children.forEach(child => {
+        if (child.type === 'Line' && child.name) {
+            linesToRemove.push(child);
+        }
+    });
+    linesToRemove.forEach(line => scene.remove(line));
+    switchHideToShow()
+
+}
+
+function switchHideToShow() {
+    mainLegend.style.display = 'none'
+    showButton.style.display = 'block'
+}
+
+function switchshowToHide() {
+    showButton.style.display = 'none'
+    mainLegend.style.display = 'block'
+}
+
+const mainLegend = document.getElementById('main')
+const hideButton = document.getElementById('hide')
+const showButton = document.getElementById('show')
+hideButton.addEventListener('click', hideBusTraces)
+showButton.addEventListener('click', showBusTraces)
+busTracesLegend.addEventListener('click', hideAndShowTrace)
+showBusTraces()
